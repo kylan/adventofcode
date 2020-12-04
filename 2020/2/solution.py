@@ -23,6 +23,7 @@ for entry in entries:
     if num_char >= mini and num_char <= maxi:
         count += 1
 
+assert(count == 600)
 print(count)
 
 ## Part 2
@@ -43,4 +44,5 @@ for entry in entries:
     if first != second:
         count += 1
 
+assert(count == 245)
 print(count)

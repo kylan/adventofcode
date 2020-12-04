@@ -18,6 +18,10 @@ def find_triplet(numbers):
             return a * pair
 
 ## Part 1
-print(find_pair(get_input(), 2020))
+answer = find_pair(get_input(), 2020)
+assert(answer == 1007104)
+print(answer)
 ## Part 2
-print(find_triplet(get_input()))
+answer = find_triplet(get_input())
+assert(answer == 18847752)
+print(answer)

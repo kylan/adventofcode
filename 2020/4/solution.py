@@ -5,7 +5,14 @@ def get_input():
         content = [line.strip() for line in f]
         return content
 
-## Part 1
+def valid_keys(keys):
+    return all(key in keys for key in ['byr',
+                                       'iyr',
+                                       'eyr',
+                                       'hgt',
+                                       'hcl',
+                                       'ecl',
+                                       'pid'])
 
 def valid_range(value, start, end):
     return int(value) >= start and int(value) <= end
@@ -28,13 +35,7 @@ def valid_pid(pid):
     return None != re.search('^\d{9}$', pid)
 
 def is_valid(passport):
-    retval = all(key in passport for key in ['byr',
-                                             'iyr',
-                                             'eyr',
-                                             'hgt',
-                                             'hcl',
-                                             'ecl',
-                                             'pid']) and \
+    retval = valid_keys(passport.keys()) and \
     valid_range(passport['byr'], 1920, 2002) and \
     valid_range(passport['iyr'], 2010, 2020) and \
     valid_range(passport['eyr'], 2020, 2030) and \
@@ -59,8 +60,20 @@ while entries:
 
 passports.append(passport)
 
+## Part 1
+
+count = 0
+for passport in passports:
+    if valid_keys(passport.keys()):
+        count += 1
+assert(count == 222)
+print(count)
+
+## Part 2
+
 count = 0
 for passport in passports:
     if is_valid(passport):
         count += 1
+assert(count == 140)
 print(count)
