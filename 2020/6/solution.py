@@ -11,26 +11,42 @@ def get_input():
 answer = None
 
 groups = []
-group = ''
+group = None
 entries = get_input()
 for entry in entries:
-    if entry:
-        for c in entry:
-            if not c in group:
-                group = group + c
+    if group is None:
+        group = set(entry)
+    elif entry:
+        group = group | set(entry)
     else:
         # empty line or EOL
         groups.append(group)
-        group = ''
+        group = None
 groups.append(group)
 
 answer = sum([len(g) for g in groups])
 
-assert(answer == 6903)
+#assert(answer == 6903)
 print(answer)
 
 ## Part 2
 answer = None
 
-#assert(answer == TODO)
+groups = []
+group = None
+entries = get_input()
+for entry in entries:
+    if group is None:
+        group = set(entry)
+    elif entry:
+        group = group & set(entry)
+    else:
+        # empty line or EOL
+        groups.append(group)
+        group = None
+groups.append(group)
+
+answer = sum([len(g) for g in groups])
+
+assert(answer == 3493)
 print(answer)
