@@ -1,14 +1,26 @@
 #!/usr/bin/env python3
 
-import sys
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument("input", help="The file with puzzle input")
+parser.add_argument("-w", "--window", help="The window size for calculation", type=int, default=25)
+parser.add_argument("--debug", help="Ignore solution assertions", action="store_true")
+args = parser.parse_args()
+
+def solution(value, check):
+    if not args.debug:
+        assert(value == check)
+    print(value)
 
 def get_input():
-    with open(sys.argv[1], 'r') as f:
+    with open(args.input, 'r') as f:
         content = [int(line.strip()) for line in f]
         return content
 
-#window = 5
-window = 25
+#example window = 5
+#input window = 25
+window = args.window
 nums = get_input()
 
 ## Part 1
@@ -29,8 +41,7 @@ def find_error(nums, window):
 
 answer = find_error(nums, window)
 
-assert(answer == 542529149)
-print(answer)
+solution(answer, 542529149)
 
 ## Part 2
 total = answer
@@ -53,5 +64,4 @@ nums = get_input()
 idx = find_middle(nums, total)
 contiguous_set = work_backward(nums[:idx], total)
 answer = min(contiguous_set) + max(contiguous_set)
-assert(answer == 75678618)
-print(answer)
+solution(answer, 75678618)
