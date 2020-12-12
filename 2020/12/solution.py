@@ -73,7 +73,6 @@ quadrant = 0
 
 def p2_parse(action):
     global wx, wy, x, y, quadrant
-    #print(action, x, y, d)
     cmd = action[0]
     mag = int(action[1:])
     if cmd == 'N':
@@ -105,10 +104,9 @@ def p2_parse(action):
     elif cmd == 'F':
         x += wx*mag 
         y += wy*mag
-    #print(x, y, d)
 
 for cmd in get_input():
     p2_parse(cmd)
 
 answer = abs(x) + abs(y)
-solution(answer, None)
+solution(answer, 63843)
