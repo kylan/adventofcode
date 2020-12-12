@@ -67,44 +67,44 @@ solution(answer, 1496)
 
 ## Part 2
 answer = None
+wx,wy = (10,1)
 x,y = (0,0)
-d = 0
-
-def p2_move(count):
-    (x, y) = (0, 0)
-    pos = 1
-    if d > 1:
-        # Negative direction
-        pos = -1
-    if d % 2 == 0:
-        # X-axis
-        x = count
-    else:
-        # Y-axis
-        y = count
-    return(pos*x, pos*y)
+quadrant = 0
 
 def p2_parse(action):
-    global x, y, d
+    global wx, wy, x, y, quadrant
     #print(action, x, y, d)
     cmd = action[0]
     mag = int(action[1:])
     if cmd == 'N':
-        y += mag
+        wy += mag
     elif cmd == 'S':
-        y -= mag
+        wy -= mag
     elif cmd == 'E':
-        x += mag
+        wx += mag
     elif cmd == 'W':
-        x -= mag
-    elif cmd == 'L':
-        d = (d + mag // 90) % 4
-    elif cmd == 'R':
-        d = (d - mag // 90) % 4
+        wx -= mag
+    elif cmd in ('L', 'R'):
+        degrees = 360 - mag if cmd == 'R' else mag
+        rotate = (degrees // 90 + quadrant) % 4
+        if rotate == 1:
+            # swap
+            (wx, wy) = (wy, wx)
+            # negate x
+            wx = -wx
+        elif rotate == 2:
+            # negate x
+            wx = -wx
+            wy = -wy
+            # negate y
+        elif rotate == 3:
+            #swap
+            (wx, wy) = (wy, wx)
+            # negate y
+            wy = -wy
     elif cmd == 'F':
-        (horiz, vert) = p2_move(mag)
-        x += horiz
-        y += vert
+        x += wx*mag 
+        y += wy*mag
     #print(x, y, d)
 
 for cmd in get_input():
