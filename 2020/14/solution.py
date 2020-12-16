@@ -30,6 +30,7 @@ def process_lines(lines):
 def update_mask(new_mask):
     global mask
     mask = new_mask
+    #print("New mask: {}".format(mask))
 
 def mask_value(value):
     result = ''
@@ -50,7 +51,7 @@ def process_cmd1(cmd):
 
 ## Part 1
 cmds = process_lines(get_lines())
-mask = cmds[0][1]
+update_mask(cmds[0][1])
 memory = {}
 for cmd in cmds[1:]:
     result = process_cmd1(cmd)
@@ -62,9 +63,19 @@ total = sum([int(memory[addr], 2) for addr in memory])
 solution(total, 7817357407588)
 
 ## Part 2
-memory = {}
-cmds = process_lines(get_lines())
-mask = cmds[0][1]
+def is_overlap(old, new):
+    if old == new:
+        return False
+    for o, n in zip(old, new):
+        if o != n and 'X' not in [o, n]:
+            return False
+    """
+    print('----Overlap-----------------------------------')
+    print(old)
+    print(new)
+    print('----------------------------------------------')
+    """
+    return True
 
 def mask_value2(value):
     result = ''
@@ -83,28 +94,39 @@ def process_cmd2(cmd):
         addr = mask_value2(addr)
         return (addr, cmd[2])
 
-def wipe_matches(new_addr):
-    global memory
-    for addr in memory:
-        match = True
-        for (n, a) in zip(new_addr, addr):
-            if n == a == 'X':
-                pass
-            elif n == 'X':
-                pass
-            elif a == 'X':
-                pass
+memory = {}
+cmds = process_lines(get_lines())
+update_mask(cmds[0][1])
 
 for cmd in cmds[1:]:
     result = process_cmd2(cmd)
     if type(result) is tuple:
         (addr, val) = result
-        copies = addr.count('X')
-        wipe_matches(addr)
-        memory[addr] = (copies, val)
+        for existing in memory:
+            if is_overlap(existing, addr):
+                replace = ''
+                for i, (e, a) in enumerate(zip(existing, addr)):
+                    if e == 'X' and a == '1':
+                        replace += '0' + existing[i+1:]
+                        break
+                    elif e == 'X' and a == '0':
+                        replace += '1' + existing[i+1:]
+                        break
+                    elif a == 'X':
+                        print("aha!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! {}".format(e))
+                    else:
+                        replace += e
+                assert(len(replace) == 36)
+                memory[replace] = memory.pop(existing)
+        memory[addr] = val
 
-print(memory)
-#total = sum([int(memory[addr], 2) for addr in memory])
-#solution(total, 7817357407588)
+total = 0
+for addr in sorted(memory, key=str):
+    subtotal = (2 ** addr.count('X')) * int(memory[addr])
+    print('{}\t{}\t{}'.format(addr, 2 ** addr.count('X'), memory[addr]))
+    total += subtotal
+print(total)
+total = sum([(2 ** addr.count('X')) * int(memory[addr]) for addr in memory])
+solution(total, None)
 
 
