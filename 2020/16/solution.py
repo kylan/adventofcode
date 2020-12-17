@@ -18,31 +18,73 @@ def get_lines():
         content = [line.strip() for line in f]
         return content
 
-## Part 1
-examples = [
-        ([0,3,6], 436),
-        ([1,3,2], 1),
-        ([2,1,3], 10),
-        ([1,2,3], 27),
-        ([2,3,1], 78),
-        ([3,2,1], 438),
-        ([3,1,2], 1836),
-        ([12,1,16,3,11,0], 1696)
-        ]
-for example, answer in examples:
-    d = {example[0]: [1], example[1]: [2], example[2]: [3]}
-    d = {}
-    for i,v in enumerate(example):
-        d[v] = [i+1]
-    print(d)
-    last = example[2]
-    for idx in range(len(example)+1, 30000000+1):
-        if len(d[last]) == 1:
-            last = 0
+def get_rules(lines):
+    rules = {}
+    for line in lines:
+        if line == '':
+            return rules
         else:
-            last = d[last][-1] - d[last][-2]
-        d[last] = [idx] if last not in d else d[last] + [idx]
-    solution(last, answer)
+            m = re.search('(\w+): (\d+)-(\d+) or (\d+)-(\d+)', line)
+            rules[m.groups()[0]] = ((int(m.groups()[1]), int(m.groups()[2])),
+                                    (int(m.groups()[3]), int(m.groups()[4])))
+
+def get_your_ticket(lines):
+    last_line = ''
+    for line in lines:
+        if last_line != 'your ticket:':
+            last_line = line
+        else:
+            return map(int, line.split(','))
+
+def get_nearby_tickets(lines):
+    while lines.pop(0) != 'nearby tickets:':
+        continue
+
+    return [map(int, line.split(',')) for line in lines]
+
+def calculate_range_union(rules):
+    ranges = []
+    for rule in rules:
+        for (lo, hi) in rules[rule]:
+            found = False
+            for r in ranges:
+                if lo <= r[1] and hi >= r[0]:
+                    found = True
+                    if lo < r[0]:
+                        r[0] = lo
+                    if hi > r[1]:
+                        r[1] = hi
+                    break
+            if not found:
+                ranges.append([lo, hi])
+    print(ranges)
+    return ranges
+
+def parse(lines):
+    rules = get_rules(lines)
+
+    your_ticket = get_your_ticket(lines)
+
+    nearby_tickets = get_nearby_tickets(lines)
+
+    return(rules, your_ticket, nearby_tickets)
+
+(rules, your_ticket, nearby_tickets) = parse(get_lines())
+
+## Part 1
+range_union = calculate_range_union(rules)
+
+violations = []
+for val in nearby_tickets:
+    for t in val:
+        in_range = False
+        for rlo, rhi in range_union:
+            if t >= rlo and t <= rhi:
+                in_range = True
+        if not in_range:
+            violations.append(t)
+
+solution(sum(violations), None)
 
 ## Part 2
 answer = None
