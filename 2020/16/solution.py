@@ -69,22 +69,30 @@ def parse(lines):
     return(rules, your_ticket, nearby_tickets)
 
 (rules, your_ticket, nearby_tickets) = parse(get_lines())
-
+print(nearby_tickets)
 ## Part 1
 range_union = calculate_range_union(rules)
 
 violations = []
-for val in nearby_tickets:
-    for t in val:
+remaining_tickets = []
+for ticket in nearby_tickets:
+    keep = True
+    for t in ticket:
         in_range = False
         for rlo, rhi in range_union:
             if t >= rlo and t <= rhi:
                 in_range = True
         if not in_range:
+            keep = False
             violations.append(t)
+    if keep:
+        remaining_tickets.append(ticket)
 
 solution(sum(violations), 21996)
 
 ## Part 2
 answer = None
+
+#print(remaining_tickets)
+
 solution(answer, None)

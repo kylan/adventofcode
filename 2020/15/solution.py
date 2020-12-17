@@ -20,28 +20,29 @@ def get_lines():
 
 ## Part 1
 examples = [
-        ([0,3,6], 436),
-        ([1,3,2], 1),
-        ([2,1,3], 10),
-        ([1,2,3], 27),
-        ([2,3,1], 78),
-        ([3,2,1], 438),
-        ([3,1,2], 1836),
-        ([12,1,16,3,11,0], 1696)
+        #([0,3,6], 436),
+        #([1,3,2], 1),
+        #([2,1,3], 10),
+        #([1,2,3], 27),
+        #([2,3,1], 78),
+        #([3,2,1], 438),
+        #([3,1,2], 1836),
+        ([12,1,16,3,11,0], 37385)
         ]
 for example, answer in examples:
-    d = {example[0]: [1], example[1]: [2], example[2]: [3]}
     d = {}
     for i,v in enumerate(example):
         d[v] = [i+1]
     print(d)
     last = example[2]
     for idx in range(len(example)+1, 30000000+1):
+        if idx % 10000 == 0:
+            print(idx)
         if len(d[last]) == 1:
             last = 0
         else:
             last = d[last][-1] - d[last][-2]
-        d[last] = [idx] if last not in d else d[last] + [idx]
+        d[last] = [idx] if last not in d else d[last][-1:] + [idx]
     solution(last, answer)
 
 ## Part 2
