@@ -57,7 +57,6 @@ def calculate_range_union(rules):
                     break
             if not found:
                 ranges.append([lo, hi])
-    print(ranges)
     return ranges
 
 def parse(lines):
@@ -84,7 +83,7 @@ for val in nearby_tickets:
         if not in_range:
             violations.append(t)
 
-solution(sum(violations), None)
+solution(sum(violations), 21996)
 
 ## Part 2
 answer = None
