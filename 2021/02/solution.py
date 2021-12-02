@@ -1,29 +1,27 @@
-
-def scan(name, window_size):
-    depths = []
+def solve(name):
+    horiz = 0
+    depth = 0
+    aim = 0
 
     with open(name) as f:
-        depths = [int(d) for d in f.read().splitlines()]
+        commands = [c.split() for c in f.read().splitlines()]
 
-    count = 0
-    i = window_size
-    last_depth = sum(depths[i-window_size:i])
+    for dir, mag in commands:
+        mag = int(mag)
+        if dir == "forward":
+            horiz += mag
+        elif dir == "up":
+            depth -= mag
+        elif dir == "down":
+            depth += mag
 
-    while i < len(depths):
-        i += 1
-        depth = sum(depths[i-window_size:i])
-        if depth > last_depth:
-            count += 1
-        else:
-            pass
-        last_depth = depth
+    print(horiz * depth)
 
-    print(count)
 
 # Part One
-for name in ('sample.txt', 'input.txt'):
-    scan(name, 1)
+for name in ["sample.txt", "input.txt"]:
+    solve(name)
 
 # Part Two
-for name in ('sample.txt', 'input.txt'):
-    scan(name, 3)
+# for name in ['sample.txt', 'input.txt']:
+#    solve(name)
